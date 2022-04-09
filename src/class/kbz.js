@@ -10,7 +10,7 @@ module.exports.config = {
     '取消英勇': '6'
   },
   // 每次循环间隔 单位 ms
-  interval: 100,
+  interval: 150,
   // 进度条的起始位置和每个进度条的宽度高度
   barPosition: {
     x: 7,
@@ -25,7 +25,7 @@ module.exports.config = {
 let 下次英勇判断 = 0;
 module.exports.loop = async function($, cast, sleep, now) {
   let 预估剩余怒气 = $.怒气;
-  if ($.目标血量 >= 20) {
+  if ($.目标血量 >= 2) {
     if ($.怒气 >= 2) {
       if ($.GCD <= 1) {
         if ($.嗜血 <= 0 && $.怒气 >= 3) {
@@ -38,7 +38,7 @@ module.exports.loop = async function($, cast, sleep, now) {
       }
     }
   } else {
-    if ($.GCD <= 2 && $.怒气 > 0) {
+    if ($.GCD <= 2 && $.怒气 > 1) {
       cast('斩杀');
     }
   }

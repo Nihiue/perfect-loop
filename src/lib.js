@@ -51,12 +51,12 @@ module.exports.getBarValues = async function getBarValues({ bars, barPosition })
 
   bars.forEach((name, idx) => {
     ret[name] = 0;
-    for (let i = 0; i <= 20; i += 1) {
+    for (let i = 0; i <= 19; i += 1) {
       const px = barPosition.x + barPosition.width * (i / 20 + 0.025);
       const py = barPosition.y + barPosition.height * idx;
       const c = getColor(img, px, py);
       if (c === COLOR_ACTIVE) {
-        ret[name] = i / 2;
+        ret[name] = (i + 1) / 2;
       } else if (c !== COLOR_BG){
         if (i === 0) {
           ret[name] = -1;
