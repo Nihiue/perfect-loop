@@ -20,7 +20,7 @@ async function main() {
       }]
     }
   ]);
-  const { config, loop } = require('./class/' + answer.class);
+  const { config, loop } = require('../class/' + answer.class);
 
   const serialPort = getSerialPort(config);
   function cast(name) {
