@@ -26,9 +26,9 @@ let 下次英勇判断 = 0;
 module.exports.loop = async function($, cast, sleep, now) {
   let 预估剩余怒气 = $.怒气;
   if ($.目标血量 >= 2) {
-    if ($.怒气 >= 2) {
+    if ($.怒气 >= 3) {
       if ($.GCD <= 1) {
-        if ($.嗜血 <= 0 && $.怒气 >= 3) {
+        if ($.嗜血 <= 0) {
           cast('嗜血');
           预估剩余怒气 -= 30;
         } else if ($.旋风斩 <= 0) {
