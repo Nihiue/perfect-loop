@@ -1,4 +1,4 @@
-const { sleep, getSerialPort, getBarValues, detectBarWidth, log, selectClass, hookAltF } = require('./lib');
+const { sleep, getSerialPort, getBarValues, detectBarWidth, log, selectClass, bindHotKey } = require('./lib');
 
 
 const DEBUG = false;
@@ -12,14 +12,14 @@ async function main() {
 
   let mode = '';
 
-  hookAltF(function(key) {
-    if (key === 'F9') {
-      mode = 'SINGLE';
-    } else if (key === 'F10') {
-      mode = 'AOE';
-    } else {
-      mode = '';
-    }
+  const hotKeyMap = {
+    'F9': 'SINGLE',
+    'F10': 'AOE',
+    'F11': ''
+  };
+
+  bindHotKey(Object.keys(hotKeyMap), (key) => {
+    mode = hotKeyMap[key];
     process.stdout.write('\x07');
     log('模式', mode || 'OFF');
   });
@@ -34,8 +34,8 @@ async function main() {
   }
 
   // ioHook.start(true);
-  console.log('[Alt + F9] 单体模式 \n[Alt + F10] AOE模式\n[Alt + F11] 关闭');
-
+  console.log('[F9] 单体模式    [F10] AOE模式    [F11] 关闭');
+  log('等待指令...');
   while (true) {
     if (mode) {
       barValues = await getBarValues(config);

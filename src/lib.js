@@ -101,15 +101,9 @@ module.exports.selectClass = async function(dict) {
   return require('../class/' + answer.class);
 }
 
-module.exports.hookAltF = function (callback) {
-  let altDown = false;
+module.exports.bindHotKey = function (keys, callback) {
   const cb = (Error, ...ogEvent) => {
-    if (!ogEvent[0].startsWith('key')) {
-      return;
-    }
-    if (ogEvent[3].indexOf('Alt') > -1) {
-      altDown = ogEvent[0] === 'keydown';
-    } else if (altDown && ogEvent[0] === 'keydown' && ['F9', 'F10', 'F11'].includes(ogEvent[3])) {
+    if (ogEvent[0] === 'keydown' && keys.includes(ogEvent[3])) {
       callback(ogEvent[3]);
     }
   }
