@@ -1,7 +1,7 @@
 const { sleep, getSerialPort, getBarValues, detectBarWidth, log, selectClass, bindHotKey } = require('./lib');
 
 
-const DEBUG = true;
+const DEBUG = false;
 async function main() {
   const { config, loop } = await selectClass({
     'kbz': '战士-狂暴',
@@ -28,16 +28,12 @@ async function main() {
   function cast(name) {
     if (config.keyMap[name]) {
       serialPort.write(config.keyMap[name]);
-      log('Cast', name);
-      if (DEBUG) {
-        log(barValues);
-      }
+      log('Cast', name, DEBUG ? barValues : '');
     } else {
       log('未找到按键', name);
     }
   }
 
-  // ioHook.start(true);
   console.log('[F9] 单体模式    [F10] AOE模式    [F11] 关闭');
   log('等待指令...');
   while (true) {

@@ -19,15 +19,15 @@ void loop() {
    int keyCount = 0;
    while(Serial.available()>0) {
     int value = Serial.read();
-    if (value >= 48 && value <=122 && keyCount < 3) {
+    if (value >= 48 && value <= 122 && keyCount < 2) {
       keyCount +=1;
       Keyboard.press(value);
-      delay(5);
+      delay(10);
     }
   }
 
   if (keyCount > 0) {
-      delay(50 + random(50));
+      delay(30 + random(30));
       Keyboard.releaseAll();
       blink();
   }

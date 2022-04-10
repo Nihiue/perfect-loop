@@ -51,21 +51,33 @@ module.exports.getBarValues = async function getBarValues({ bars, barPosition })
   const img = await getScreenShot(barPosition.x + barPosition.width + 10, barPosition.y + barPosition.height * (bars.length + 2));
   const ret = {};
 
+  function getNthPoint(i, py) {
+    const px = barPosition.x + barPosition.width * ((i - 0.5) / 100);
+
+    return getColor(img, px, py);
+  }
+
   bars.forEach((name, idx) => {
-    ret[name] = 0;
-    for (let i = 0; i <= 19; i += 1) {
-      const px = barPosition.x + barPosition.width * (i / 20 + 0.025);
-      const py = barPosition.y + barPosition.height * (idx + 0.5);
-      const c = getColor(img, px, py);
+    const barY = barPosition.y + barPosition.height * (idx + 0.5);
+    let ptIdx = 0;
+    for (let i = 1; i <= 100; i += 20) {
+      const c = getNthPoint(i, barY);
       if (c === COLOR_ACTIVE) {
-        ret[name] = 5 * (i + 1);
+        ptIdx = i;
       } else if (c !== COLOR_BG){
-        if (i === 0) {
-          ret[name] = -1;
-        }
+        ptIdx = -1;
         break;
       }
     }
+    if (ptIdx !== -1) {
+      const rangeEnd = Math.min(100, ptIdx + 19);
+      for (let k = ptIdx + 1; k <= rangeEnd; k += 2) {
+        if (getNthPoint(k, barY) === COLOR_ACTIVE) {
+          ptIdx = k;
+        }
+      }
+    }
+    ret[name] = ptIdx;
   });
 
   return ret;

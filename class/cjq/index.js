@@ -32,7 +32,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   if ($.下次普攻_4 < 0) {
     return;
   }
-  const gcdReady = $.GCD <= 10;
+  const gcdReady = $.GCD < 10;
   const 下次普攻InSec = $.下次普攻_4 /100 * 4;
 
   if ($.GCD >= 70) {
