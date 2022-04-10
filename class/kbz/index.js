@@ -21,6 +21,12 @@ module.exports.config = {
     width: 140,
     height: 14.5,
   },
+  // barPosition: {
+  //     x: 7,
+  //     y: 86,
+  //     width: 136,
+  //     height: 14,
+  // },
   // 单片机串口
   port: 'COM8'
 };
