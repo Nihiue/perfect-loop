@@ -1,11 +1,12 @@
 const { sleep, getSerialPort, getBarValues, detectBarWidth, log, selectClass, bindHotKey } = require('./lib');
 
 
-const DEBUG = false;
+const DEBUG = true;
 async function main() {
   const { config, loop } = await selectClass({
     'kbz': '战士-狂暴',
-    'druid-tank': '德鲁伊-守护'
+    'druid-tank': '德鲁伊-守护',
+    'cjq': '圣骑士-惩戒'
   });
   const serialPort = getSerialPort(config);
   let barValues;
@@ -28,6 +29,9 @@ async function main() {
     if (config.keyMap[name]) {
       serialPort.write(config.keyMap[name]);
       log('Cast', name);
+      if (DEBUG) {
+        log(barValues);
+      }
     } else {
       log('未找到按键', name);
     }
@@ -39,9 +43,6 @@ async function main() {
   while (true) {
     if (mode) {
       barValues = await getBarValues(config);
-      if (DEBUG) {
-        console.log(barValues);
-      }
       await loop({
         cast,
         sleep,

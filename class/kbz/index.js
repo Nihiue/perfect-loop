@@ -60,13 +60,12 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
       if ($.旋风斩 <= 0 && 预估剩余怒气 >= 25) {
         cast('旋风斩');
         预估剩余怒气 -= 25;
-      } else if (预估剩余怒气 >= 50) {
+      } else if ($.横扫攻击 <= 0 && 预估剩余怒气 >= 50) {
         cast('横扫攻击');
         await sleep(50);
         cast('顺劈斩');
         预估剩余怒气 -= 30;
-      }
-      if ($.横扫攻击 > 10) {
+      } else if ($.横扫攻击 > 10) {
         // 横扫可用时不打顺劈 存怒
         if ($.主手英勇顺劈 <= 0 && 预估剩余怒气 >= 20) {
           cast('顺劈斩');
@@ -97,7 +96,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
     if (now > 下次英勇判断) { // 单体卡英勇
       if ($.主手英勇顺劈 === 0 && 预估剩余怒气 > 10) {
         cast('英勇');
-      } else if (预估剩余怒气 < 50 && $.主手英勇顺劈 >= 80) {
+      } else if (预估剩余怒气 < 60 && $.主手英勇顺劈 > 80) {
         cast('取消英勇');
         下次英勇判断 = now + 500;
       }
