@@ -16,21 +16,21 @@ module.exports.config = {
     x: 7,
     y: 42,
     width: 140,
-    height: 14,
+    height: 14.5,
   },
   // 单片机串口
   port: 'COM8'
 };
 
 let 下次重殴判断 = 0;
-module.exports.loop = async function($, cast, sleep, now) {
+module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   let 预估剩余怒气 = $.怒气;
-  if ($.GCD <= 1) {
-    if ($.怒气 > 1) {
+  if ($.GCD <= 10) {
+    if ($.怒气 > 10) {
       if ($.裂伤 <= 0) {
         cast('裂伤');
         预估剩余怒气 -= 15;
-      } else if ($.割伤 <= 4) {
+      } else if ($.割伤 <= 40 && mode !== 'AOE') {
         cast('割伤');
         预估剩余怒气 -= 15;
       } else {
@@ -41,7 +41,7 @@ module.exports.loop = async function($, cast, sleep, now) {
       cast('精灵火');
     }
   }
-  if (now > 下次重殴判断 && 预估剩余怒气 > 4) {
+  if (now > 下次重殴判断 && 预估剩余怒气 > 40) {
     cast('重殴');
     下次重殴判断 = now + 600;
   }

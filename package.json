@@ -1,10 +1,11 @@
 {
-  "name": "wow-auto",
+  "name": "perfect-loop",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "dependencies": {
     "@jitsi/robotjs": "^0.6.9",
+    "@tcardlab/rshook": "0.0.5",
     "inquirer": "^8.2.2",
     "serialport": "^10.4.0"
   },
@@ -16,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/Nihiue/wow-auto.git"
   },
-  "author": "",
+  "author": "nihiue@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Nihiue/wow-auto/issues"

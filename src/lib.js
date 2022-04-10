@@ -1,5 +1,7 @@
 const robotjs = require('@jitsi/robotjs');
 const { SerialPort } = require('serialport');
+const inquirer = require("inquirer");
+const { rsHook } = require('@tcardlab/rshook');
 
 const COLOR_ACTIVE = 'ff0000';
 const COLOR_BG = '282728';
@@ -46,17 +48,17 @@ module.exports.detectBarWidth = async function detectBarWidth(x, y) {
 }
 
 module.exports.getBarValues = async function getBarValues({ bars, barPosition }) {
-  const img = await getScreenShot(barPosition.x + barPosition.width, barPosition.y + barPosition.height * (bars.length + 1));
+  const img = await getScreenShot(barPosition.x + barPosition.width + 10, barPosition.y + barPosition.height * (bars.length + 2));
   const ret = {};
 
   bars.forEach((name, idx) => {
     ret[name] = 0;
     for (let i = 0; i <= 19; i += 1) {
       const px = barPosition.x + barPosition.width * (i / 20 + 0.025);
-      const py = barPosition.y + barPosition.height * idx;
+      const py = barPosition.y + barPosition.height * (idx + 0.5);
       const c = getColor(img, px, py);
       if (c === COLOR_ACTIVE) {
-        ret[name] = (i + 1) / 2;
+        ret[name] = 5 * (i + 1);
       } else if (c !== COLOR_BG){
         if (i === 0) {
           ret[name] = -1;
@@ -74,4 +76,42 @@ module.exports.getSerialPort = function (config) {
     path: config.port,
     baudRate: 19200,
   });
+}
+
+module.exports.log = function (...args) {
+  const a = new Date();
+  console.log(`${a.getHours().toString().padStart(2, '0')}:${a.getMinutes().toString().padStart(2, '0')}:${a.getSeconds().toString().padStart(2, '0')}`, ...args);
+}
+
+module.exports.selectClass = async function(dict) {
+  const opt = [
+    {
+      type: "list",
+      name: "class",
+      message: "选择职业和专精",
+      choices: Object.keys(dict).map(k => {
+        return {
+          name: dict[k],
+          value: k
+        };
+      })
+    }
+  ];
+  const answer = await inquirer.prompt(opt);
+  return require('../class/' + answer.class);
+}
+
+module.exports.hookAltF = function (callback) {
+  let altDown = false;
+  const cb = (Error, ...ogEvent) => {
+    if (!ogEvent[0].startsWith('key')) {
+      return;
+    }
+    if (ogEvent[3].indexOf('Alt') > -1) {
+      altDown = ogEvent[0] === 'keydown';
+    } else if (altDown && ogEvent[0] === 'keydown' && ['F9', 'F10', 'F11'].includes(ogEvent[3])) {
+      callback(ogEvent[3]);
+    }
+  }
+  rsHook(cb);
 }
