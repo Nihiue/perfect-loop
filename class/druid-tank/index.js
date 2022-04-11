@@ -31,8 +31,8 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
       cast('精灵火');
     }
   }
-  if (now > 下次重殴判断 && 预估剩余怒气 > 60) {
+  if (now > 下次重殴判断 && 预估剩余怒气 > 30) {
     cast('重殴');
-    下次重殴判断 = now + 1000;
+    下次重殴判断 = now + 800;
   }
 }
