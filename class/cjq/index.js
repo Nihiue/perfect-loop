@@ -7,24 +7,7 @@ module.exports.config = {
     '审判': '2',
     '命令圣印': '3',
     '鲜血圣印': '4'
-  },
-  // 每次循环间隔 单位 ms
-  interval: 100,
-  // 进度条的起始位置和每个进度条的宽度高度
-  barPosition: {
-    x: 7,
-    y: 42,
-    width: 140,
-    height: 14.5,
-  },
-  // barPosition: {
-  //     x: 7,
-  //     y: 86,
-  //     width: 136,
-  //     height: 14,
-  // },
-  // 单片机串口
-  port: 'COM8'
+  }
 };
 
 const gcdArr = [100];
@@ -32,17 +15,18 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   if ($.下次普攻_4 < 0) {
     return;
   }
-  const gcdReady = $.GCD < 10;
+  const gcdReady = $.GCD < 5;
   const 下次普攻InSec = $.下次普攻_4 /100 * 4;
 
-  if ($.GCD >= 70) {
+  if ($.GCD > 5) {
     gcdArr.push($.GCD);
-    if (gcdArr.length > 10) {
+    if (gcdArr.length > 30) {
       gcdArr.shift();
     }
   }
 
-  $.totalGCD = Math.max(1.2, Math.max(...gcdArr) / 100 * 1.5) + 0.05;
+  $.totalGCD = Math.max(1.2, 0.05 + Math.max(...gcdArr) / 100 * 1.5);
+
   if (gcdReady) {
     if ($.鲜血圣印 > 0) {
       if ($.十字军打击 <= 0) {

@@ -12,28 +12,11 @@ module.exports.config = {
     '斩杀': 'E',
     '横扫攻击': 'T'
   },
-  // 每次循环间隔 单位 ms
-  interval: 100,
-  // 进度条的起始位置和每个进度条的宽度高度
-  // barPosition: {
-  //   x: 7,
-  //   y: 42,
-  //   width: 140,
-  //   height: 14.5,
-  // },
-  barPosition: {
-      x: 7,
-      y: 86,
-      width: 136,
-      height: 14,
-  },
-  // 单片机串口
-  port: 'COM8'
 };
 
 module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   let 预估剩余怒气 = $.怒气;
-  let gcdReady = $.GCD < 10;
+  let gcdReady = $.GCD < 5;
 
   if ($.乘胜追击 > 0 && $.怒气 > 0 && gcdReady) {
     cast('乘胜追击');
@@ -78,7 +61,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
       }
     }
   } else {
-    if ($.目标血量 >= 0) { // 单体非斩杀
+    if ($.目标血量 >= 20) { // 单体非斩杀
       if (预估剩余怒气 >= 30 && gcdReady) {
         if ($.嗜血 <= 0) {
           cast('嗜血');
@@ -88,20 +71,20 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
           预估剩余怒气 -= 25;
         }
       }
+
+      if ($.英勇顺劈 > 0) { // 英勇激活
+        if (预估剩余怒气 < 50 && $.主手攻击 >= 80) {
+          cast('取消英勇');
+        }
+      } else {
+        if ($.主手攻击 > 0 && $.主手攻击 < 60 && 预估剩余怒气 >= 12) {
+          cast('英勇');
+        }
+      }
     } else { // 单体斩杀
-      if (gcdReady && 预估剩余怒气 > 10) {
+      if (gcdReady && 预估剩余怒气 >= 12) {
         cast('斩杀');
-      }
-    }
-
-
-    if ($.英勇顺劈 > 0) { // 英勇激活
-      if (预估剩余怒气 < 50 && $.主手攻击 >= 80) {
-        cast('取消英勇');
-      }
-    } else {
-      if ($.主手攻击 > 0 && $.主手攻击 < 60 && 预估剩余怒气 >= 12) {
-        cast('英勇');
+        预估剩余怒气 = 0;
       }
     }
   }

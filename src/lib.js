@@ -2,9 +2,12 @@ const robotjs = require('@jitsi/robotjs');
 const { SerialPort } = require('serialport');
 const inquirer = require("inquirer");
 const { rsHook } = require('@tcardlab/rshook');
+const fs = require('fs');
+const path = require('path');
 
 const COLOR_ACTIVE = 'ff0000';
 const COLOR_BG = '282728';
+const COLOR_DETECT = 'c400ff';
 
 async function getScreenShot(w, h) {
   try {
@@ -16,12 +19,16 @@ async function getScreenShot(w, h) {
   }
 }
 
-module.exports.sleep = async function sleep(ms = 500) {
-  return new Promise(r => setTimeout(r, ms));
-}
 function hex(n) {
   return n.toString(16).padStart(2, '0');
 }
+
+async function sleep(ms = 500) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+module.exports.sleep = sleep;
+
 
 function getColor (img, x, y) {
   const index = (Math.round(y) * img.width + Math.round(x)) * img.bytesPerPixel;
@@ -36,57 +43,103 @@ function getColor (img, x, y) {
   return ret;
 }
 
-module.exports.detectBarWidth = async function detectBarWidth(x, y) {
-  const { width } = await robotjs.getScreenSize();
-  const img = await getScreenShot(width, y + 1);
-  for (let i = x; i < width; i += 1) {
-    const c = getColor(img, i, y);
-    if (c !== COLOR_ACTIVE && c !== COLOR_BG) {
-      return i - x;
-    }
-  }
-}
+module.exports.detectBarSize = async function detectBarSize() {
+  const { width, height } = await robotjs.getScreenSize();
+  const w = Math.round(width / 2);
+  const h = Math.round(height / 2);
 
-module.exports.getBarValues = async function getBarValues({ bars, barPosition }) {
-  const img = await getScreenShot(barPosition.x + barPosition.width + 10, barPosition.y + barPosition.height * (bars.length + 2));
-  const ret = {};
+  console.log('请导入定位 WA 并切换到游戏画面');
+  console.log(`检测范围 ${w} * ${h}`);
 
-  function getNthPoint(i, py) {
-    const px = barPosition.x + barPosition.width * ((i - 0.5) / 100);
-
-    return getColor(img, px, py);
-  }
-
-  bars.forEach((name, idx) => {
-    const barY = barPosition.y + barPosition.height * (idx + 0.5);
-    let ptIdx = 0;
-    for (let i = 1; i <= 100; i += 20) {
-      const c = getNthPoint(i, barY);
-      if (c === COLOR_ACTIVE) {
-        ptIdx = i;
-      } else if (c !== COLOR_BG){
-        ptIdx = -1;
-        break;
-      }
-    }
-    if (ptIdx !== -1) {
-      const rangeEnd = Math.min(100, ptIdx + 19);
-      for (let k = ptIdx + 1; k <= rangeEnd; k += 2) {
-        if (getNthPoint(k, barY) === COLOR_ACTIVE) {
-          ptIdx = k;
+  const globalConfig = require('../class/global-config.json');
+  while (true) {
+    let x0 = 99999, x1 = -1, y0 = 99999, y1 = -1;
+    const img = await getScreenShot(w, h);
+    for (let y = 0; y < h; y += 1) {
+      for (let x = 0; x < w; x += 1) {
+        if (getColor(img, x, y) === COLOR_DETECT) {
+          if (x0 > x) {
+            x0 = x;
+          }
+          if (x1 < x) {
+            x1 = x;
+          }
+          if (y0 > y) {
+            y0 = y;
+          }
+          if (y1 < y) {
+            y1 = y;
+          }
         }
       }
     }
-    ret[name] = ptIdx;
+    if (x1 - x0 > 50 && y1 - y0 > 5) {
+      globalConfig.barPosition = {
+        x: x0,
+        y: y0,
+        width: x1 - x0,
+        height: y1 - y0
+      };
+      fs.writeFileSync(
+        path.join(__dirname, '../class/global-config.json'),
+        JSON.stringify(globalConfig, null, 2),
+        'utf-8'
+      );
+      console.log('配置已更新');
+      console.log(globalConfig.barPosition);
+    } else {
+      console.log('未找到色块');
+    }
+    await sleep(2000);
+  }
+}
+
+module.exports.getBarValues = async function getBarValues(bars, barPosition) {
+  const areaW = Math.round(barPosition.x + barPosition.width * 1.1);
+  const areaH = Math.round(barPosition.y + barPosition.height * bars.length * 1.1);
+  const img = await getScreenShot(areaW, areaH);
+  const ret = {};
+
+  bars.forEach((name, idx) => {
+    const barY = barPosition.y + 1.1 * barPosition.height * (idx + 0.5);
+
+    const startColor = getColor(img, barPosition.x + 1, barY);
+    const endColor = getColor(img, barPosition.x + barPosition.width - 1 , barY);
+
+    if (startColor === COLOR_BG && endColor === COLOR_BG) {
+      ret[name] = 0;
+    } else if (startColor === COLOR_ACTIVE && endColor === COLOR_ACTIVE) {
+      ret[name] = 100;
+    } else {
+      let low = 1, high = barPosition.width, mid = 0;
+
+      while (low < high - 1) {
+        mid = Math.floor((low + high) / 2);
+        const curColor = getColor(img, barPosition.x + mid, barY);
+        if (curColor === COLOR_ACTIVE) {
+          low = mid;
+        } else if (curColor === COLOR_BG) {
+          high = mid;
+        } else {
+          low = -1;
+          break;
+        }
+      }
+      if (low === -1) {
+        ret[name] = -1;
+      } else {
+        ret[name] = Math.round(100 * low / barPosition.width);
+      }
+    }
   });
 
   return ret;
 }
 
-module.exports.getSerialPort = function (config) {
+module.exports.getSerialPort = function (port) {
   return new SerialPort({
-    path: config.port,
-    baudRate: 19200,
+    path: port,
+    baudRate: 9600,
   });
 }
 
@@ -100,7 +153,7 @@ module.exports.selectClass = async function(dict) {
     {
       type: "list",
       name: "class",
-      message: "选择职业和专精",
+      message: "选择职业及专精",
       choices: Object.keys(dict).map(k => {
         return {
           name: dict[k],
@@ -110,7 +163,7 @@ module.exports.selectClass = async function(dict) {
     }
   ];
   const answer = await inquirer.prompt(opt);
-  return require('../class/' + answer.class);
+  return answer.class;
 }
 
 module.exports.bindHotKey = function (keys, callback) {

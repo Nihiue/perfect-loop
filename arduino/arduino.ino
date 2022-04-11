@@ -12,7 +12,8 @@ void setup() {
   randomSeed(analogRead(5));
 
   Keyboard.begin();
-  Serial.begin(19200);
+  Serial.begin(9600);
+
 }
 
 void loop() {
@@ -22,7 +23,8 @@ void loop() {
     if (value >= 48 && value <= 122 && keyCount < 2) {
       keyCount +=1;
       Keyboard.press(value);
-      delay(10);
+      // Serial.write(value);
+      delay(3);
     }
   }
 
