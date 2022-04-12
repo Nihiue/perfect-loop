@@ -145,11 +145,25 @@ module.exports.getBarValues = async function getBarValues(bars, barPosition) {
   return ret;
 }
 
-module.exports.getSerialPort = function (port) {
-  return new SerialPort({
-    path: port,
-    baudRate: 9600,
-  });
+let serialport;
+
+module.exports.initKeyboard = function initKeyboard(config) {
+  if (config.softKeyboard) {
+    robotjs.setKeyboardDelay(50);
+  } else {
+    serialport = new SerialPort({
+      path: config.port,
+      baudRate: 9600,
+    });
+  }
+}
+
+module.exports.pressKey = function pressKey(config, k) {
+  if (config.softKeyboard) {
+    robotjs.keyTap(k);
+  } else {
+    serialport.write(k);
+  }
 }
 
 module.exports.log = function (...args) {
