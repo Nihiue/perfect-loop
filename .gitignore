@@ -1,2 +1,3 @@
 *.hex
 node_modules/
+dist/

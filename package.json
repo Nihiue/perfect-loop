@@ -9,18 +9,25 @@
     "inquirer": "^8.2.2",
     "serialport": "^10.4.0"
   },
+  "bin": "src/index.js",
   "devDependencies": {},
-  "scripts": {
-    "main": "node src/index.js"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nihiue/wow-auto.git"
+    "url": "git+https://github.com/Nihiue/perfect-loop.git"
   },
   "author": "nihiue@gmail.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Nihiue/wow-auto/issues"
+    "url": "https://github.com/Nihiue/perfect-loop/issues"
   },
-  "homepage": "https://github.com/Nihiue/wow-auto#readme"
+  "homepage": "https://github.com/Nihiue/perfect-loop#readme",
+  "pkg": {
+    "scripts": "src/**/*.js",
+    "assets": [
+      "node_modules/@jitsi/robotjs/prebuilds/win32-x64/*.node",
+      "node_modules/@serialport/bindings-cpp/prebuilds/win32-x64/*.node"
+    ],
+    "targets": [ "node14-windows-x64" ],
+    "outputPath": "dist"
+  }
 }

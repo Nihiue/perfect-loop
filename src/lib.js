@@ -1,9 +1,12 @@
-const robotjs = require('@jitsi/robotjs');
-const { SerialPort } = require('serialport');
-const inquirer = require("inquirer");
-const { rsHook } = require('@tcardlab/rshook');
+
 const fs = require('fs');
 const path = require('path');
+
+const robotjs = require('@jitsi/robotjs');
+const inquirer = require("inquirer");
+const { SerialPort } = require('serialport');
+const { rsHook } = require('@tcardlab/rshook');
+
 
 const COLOR_ACTIVE = 'ff0000';
 const COLOR_BG = '282728';
@@ -29,6 +32,12 @@ async function sleep(ms = 500) {
 
 module.exports.sleep = sleep;
 
+const basePath = __dirname.includes('\\snapshot\\') ? process.execPath : __dirname;
+const classFolderPath = path.join(basePath, '../class');
+const globalConfigPath = path.join(classFolderPath, 'global-config.json');
+
+module.exports.classFolderPath = classFolderPath;
+module.exports.globalConfigPath = globalConfigPath;
 
 function getColor (img, x, y) {
   const index = (Math.round(y) * img.width + Math.round(x)) * img.bytesPerPixel;
@@ -51,7 +60,7 @@ module.exports.detectBarSize = async function detectBarSize() {
   console.log('请导入定位 WA 并切换到游戏画面');
   console.log(`检测范围 ${w} * ${h}`);
 
-  const globalConfig = require('../class/global-config.json');
+  const globalConfig = require(globalConfigPath);
   while (true) {
     let x0 = 99999, x1 = -1, y0 = 99999, y1 = -1;
     const img = await getScreenShot(w, h);
@@ -81,7 +90,7 @@ module.exports.detectBarSize = async function detectBarSize() {
         height: y1 - y0
       };
       fs.writeFileSync(
-        path.join(__dirname, '../class/global-config.json'),
+        globalConfigPath,
         JSON.stringify(globalConfig, null, 2),
         'utf-8'
       );
@@ -173,4 +182,8 @@ module.exports.bindHotKey = function (keys, callback) {
     }
   }
   rsHook(cb);
+}
+
+module.exports.beep = function () {
+  process.stdout.write('\x07');
 }
