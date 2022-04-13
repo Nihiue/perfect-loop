@@ -1,4 +1,5 @@
 *.hex
 node_modules/
-perfect-loop-release/
+perfect-loop-release/perfect-loop.exe
+perfect-loop-release/class/
 perfect-loop-release.zip
