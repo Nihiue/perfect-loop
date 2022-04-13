@@ -1,3 +1,4 @@
 *.hex
 node_modules/
-dist/
+perfect-loop-release/
+perfect-loop-release.zip

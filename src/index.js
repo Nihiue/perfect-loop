@@ -1,6 +1,8 @@
 
 const DEBUG = false;
 const path = require('path');
+const { sleep, log, beep, selectClass, globalConfigPath, classFolderPath } = require('./utils');
+const globalConfig = require(globalConfigPath);
 
 const hotKeyMap = {
   'F9': 'SINGLE',
@@ -10,40 +12,19 @@ const hotKeyMap = {
 
 async function main() {
   try {
-    const {
-      sleep,
-      log,
-      beep,
-      selectClass,
+    const { getBarValues, showConfig, registerHotkey, initKeyboard } = require('./core');
 
-      globalConfigPath,
-      classFolderPath,
-
-      getBarValues,
-      detectBarSize,
-
-      bindHotKey,
-      initKeyboard,
-      pressKey
-    } = require('./lib');
-
-    const selection = await selectClass({
-      'kbz': '战士 - 狂暴',
-      'druid-tank': '德鲁伊 - 守护',
-      'cjq': '圣骑士 - 惩戒',
-      'detect-bar': '工具 - 自动寻找 WA 位置'
-    });
-
-    if (selection === 'detect-bar') {
-      await detectBarSize();
-      return;
+    const selection = await selectClass(globalConfig.classMap);
+    if (selection === 'config') {
+      await showConfig(globalConfig);
+      console.clear();
+      return main();
     }
 
-    const globalConfig = require(globalConfigPath);
     const { config: classConfig, loop } = require(path.join(classFolderPath, selection));
+    const pressKeyboard = initKeyboard(globalConfig);
 
-    initKeyboard(globalConfig);
-    bindHotKey(Object.keys(hotKeyMap), (key) => {
+    registerHotkey(Object.keys(hotKeyMap), (key) => {
       mode = hotKeyMap[key];
       log('模式', mode || 'OFF');
       beep();
@@ -53,9 +34,10 @@ async function main() {
     log('等待指令...');
 
     let barValues, mode = '';
+
     function cast(name) {
       if (classConfig.keyMap[name]) {
-        pressKey(globalConfig, classConfig.keyMap[name]);
+        pressKeyboard(classConfig.keyMap[name]);
         log('Cast', name, DEBUG ? JSON.stringify(barValues) : '');
       } else {
         log('未找到按键', name);
@@ -82,7 +64,7 @@ async function main() {
       if (mode) {
         await Promise.all([
           loopPass(),
-          sleep(100)
+          sleep(1000)
         ]);
       } else {
         await sleep(500);

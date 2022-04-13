@@ -28,6 +28,6 @@
       "node_modules/@serialport/bindings-cpp/prebuilds/win32-x64/*.node"
     ],
     "targets": [ "node14-windows-x64" ],
-    "outputPath": "dist"
+    "outputPath": "perfect-loop-release"
   }
 }
