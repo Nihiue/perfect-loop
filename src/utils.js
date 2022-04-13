@@ -40,7 +40,7 @@ function beep() {
   process.stdout.write('\x07');
 }
 
-const basePath = __dirname.includes('\\snapshot\\') ? process.execPath : __dirname;
+const basePath = __dirname.includes('\\snapshot\\') ? process.execPath : path.join(__dirname, '../perfect-loop-release/class');
 
 module.exports = {
   sleep,
