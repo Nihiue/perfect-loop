@@ -6,10 +6,11 @@
     "height": 13
   },
   "port": "COM8",
-  "softKeyboard": true,
+  "softKeyboard": false,
   "classMap": {
     "kbz": "战士 - 狂暴",
     "druid-tank": "德鲁伊 - 守护",
     "cjq": "圣骑士 - 惩戒"
-  }
+  },
+  "sound": false
 }

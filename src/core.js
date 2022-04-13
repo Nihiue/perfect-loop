@@ -143,11 +143,11 @@ module.exports.showConfig = async function(globalConfig) {
       name: "selection",
       message: "设置",
       choices: [{
-        name: '使用软件模拟键盘',
-        value: 'soft-keyboard'
+        name: globalConfig.softKeyboard ? '切换到外部硬件键盘' : '切换到软件模拟键盘',
+        value: 'toogle-keyboard'
       }, {
-        name: '使用外部硬件键盘',
-        value: 'external-keyboard'
+        name: globalConfig.sound ? '关闭声音': '开启声音',
+        value: 'toggle-sound'
       }, {
         name: '寻找WA显示位置',
         value: 'detect-bar'
@@ -158,33 +158,36 @@ module.exports.showConfig = async function(globalConfig) {
     }
   ]);
   switch (answer.selection) {
-    case 'soft-keyboard':
-      globalConfig.softKeyboard = true;
-      break;
-    case 'external-keyboard':
-      const ports = await SerialPort.list();
-      if (ports.length === 0) {
-        console.log('未找到可用的串口');
-        return;
-      }
-      const portAns = await inquirer.prompt([
-        {
-          type: "list",
-          name: "selection",
-          message: "选择外部键盘串口",
-          choices: ports.map(function(p) {
-            return {
-              name: `${p.path} - ${p.friendlyName}`,
-              value: p.path
-            };
-          })
+    case 'toogle-keyboard':
+      globalConfig.softKeyboard = !globalConfig.softKeyboard;
+      if (!globalConfig.softKeyboard) {
+        const ports = await SerialPort.list();
+        if (ports.length === 0) {
+          console.log('未找到可用的串口');
+          return;
         }
-      ]);
-      globalConfig.port = portAns.selection;
+        const portAns = await inquirer.prompt([
+          {
+            type: "list",
+            name: "selection",
+            message: "选择硬件键盘串口",
+            choices: ports.map(function(p) {
+              return {
+                name: `${p.path} - ${p.friendlyName}`,
+                value: p.path
+              };
+            })
+          }
+        ]);
+        globalConfig.port = portAns.selection;
+      }
+      break;
+    case 'toggle-sound':
+      globalConfig.sound = !globalConfig.sound;
       break;
     case 'detect-bar':
-      await detectBarSize(globalConfig);
-      break;
+        await detectBarSize(globalConfig);
+        break;
     default:
       return;
   }

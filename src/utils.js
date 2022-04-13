@@ -19,7 +19,7 @@ async function selectClass(dict) {
     {
       type: "list",
       name: "class",
-      message: "Perfect Loop By Nihiue",
+      message: "主菜单",
       choices: Object.keys(dict).map(k => {
         return {
           name: dict[k],

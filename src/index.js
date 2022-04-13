@@ -14,6 +14,12 @@ async function main() {
   try {
     const { getBarValues, showConfig, registerHotkey, initKeyboard } = require('./core');
 
+    console.log('Perfect Loop - By Nihiue', '\n');
+    console.log([
+      `键盘：${globalConfig.softKeyboard ? '软件模拟' : ('硬件-' + globalConfig.port)}`,
+      `声音: ${globalConfig.sound ? '开' : '关'}`
+    ].join('  '), '\n');
+
     const selection = await selectClass(globalConfig.classMap);
     if (selection === 'config') {
       await showConfig(globalConfig);
@@ -27,7 +33,9 @@ async function main() {
     registerHotkey(Object.keys(hotKeyMap), (key) => {
       mode = hotKeyMap[key];
       log('模式', mode || 'OFF');
-      beep();
+      if (globalConfig.sound) {
+        beep();
+      }
     });
 
     console.log('[F9] 单体模式    [F10] AOE模式    [F11] 关闭');
