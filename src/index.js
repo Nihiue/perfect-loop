@@ -1,5 +1,3 @@
-
-const DEBUG = false;
 const path = require('path');
 const { sleep, log, beep, selectClass, globalConfigPath, classFolderPath } = require('./utils');
 const globalConfig = require(globalConfigPath);
@@ -17,7 +15,8 @@ async function main() {
     console.log('Perfect Loop - By Nihiue', '\n');
     console.log([
       `键盘：${globalConfig.softKeyboard ? '软件模拟' : ('硬件-' + globalConfig.port)}`,
-      `声音: ${globalConfig.sound ? '开' : '关'}`
+      `声音: ${globalConfig.sound ? '开' : '关'}`,
+      globalConfig.debug ? 'DEBUG启用' : ''
     ].join('  '), '\n');
 
     const selection = await selectClass(globalConfig.classMap);
@@ -46,7 +45,7 @@ async function main() {
     function cast(name) {
       if (classConfig.keyMap[name]) {
         pressKeyboard(classConfig.keyMap[name]);
-        log('Cast', name, DEBUG ? JSON.stringify(barValues) : '');
+        log('Cast', name, globalConfig.debug ? JSON.stringify(barValues) : '');
       } else {
         log('未找到按键', name);
       }

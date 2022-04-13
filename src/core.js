@@ -149,6 +149,9 @@ module.exports.showConfig = async function(globalConfig) {
         name: globalConfig.sound ? '关闭声音': '开启声音',
         value: 'toggle-sound'
       }, {
+        name: globalConfig.debug ? '关闭 DEBUG': '开启 DEBUG',
+        value: 'toggle-debug'
+      }, {
         name: '寻找WA显示位置',
         value: 'detect-bar'
       }, {
@@ -186,8 +189,11 @@ module.exports.showConfig = async function(globalConfig) {
       globalConfig.sound = !globalConfig.sound;
       break;
     case 'detect-bar':
-        await detectBarSize(globalConfig);
-        break;
+      await detectBarSize(globalConfig);
+      break;
+    case 'toggle-debug':
+      globalConfig.debug = !globalConfig.debug;
+      break;
     default:
       return;
   }
