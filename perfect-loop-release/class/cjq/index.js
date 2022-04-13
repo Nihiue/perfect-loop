@@ -15,7 +15,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
     return;
   }
   const gcdLength = 1.5 * (1 - $.法术急速);
-  const gcdReady = $.GCD < 5;
+  const gcdReady = $.GCD < 7;
   const 下次普攻 = $.下次普攻_4 / 100 * 4;
 
   if (gcdReady) {

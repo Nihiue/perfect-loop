@@ -12,5 +12,6 @@
     "druid-tank": "德鲁伊 - 守护",
     "cjq": "圣骑士 - 惩戒"
   },
-  "sound": false
+  "sound": false,
+  "debug": false
 }

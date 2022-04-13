@@ -71,7 +71,7 @@ async function main() {
       if (mode) {
         await Promise.all([
           loopPass(),
-          sleep(1000)
+          sleep(100)
         ]);
       } else {
         await sleep(500);

@@ -14,7 +14,7 @@ module.exports.config = {
 let 下次重殴判断 = 0;
 module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   let 预估剩余怒气 = $.怒气;
-  const gcdReady = $.GCD < 5;
+  const gcdReady = $.GCD < 7;
   if (gcdReady) {
     if ($.怒气 > 15) {
       if ($.裂伤 <= 0) {
@@ -27,11 +27,11 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
         cast('横扫');
         预估剩余怒气 -= 15;
       }
-    } else if ($.精灵火 > 0) {
+    } else if ($.精灵火 < 60) {
       cast('精灵火');
     }
   }
-  if (now > 下次重殴判断 && 预估剩余怒气 > 30) {
+  if (now > 下次重殴判断 && 预估剩余怒气 > 35) {
     cast('重殴');
     下次重殴判断 = now + 800;
   }
