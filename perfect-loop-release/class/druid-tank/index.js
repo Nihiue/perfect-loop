@@ -16,7 +16,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   let 预估剩余怒气 = $.怒气;
   const gcdReady = $.GCD < 7;
   if (gcdReady) {
-    if ($.怒气 > 0 && $.精灵火 > 0 && $.精灵火 <= 10) {
+    if ($.怒气 > 0 && $.精灵火 <= 15 && mode !== 'AOE') {
       cast('精灵火');
     } else if ($.怒气 > 15) {
       if ($.裂伤 <= 0) {
