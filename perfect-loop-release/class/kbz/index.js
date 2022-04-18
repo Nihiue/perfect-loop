@@ -31,17 +31,17 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   }
 
   if (mode === 'AOE') {
-    if ($.横扫攻击 >= 80) { // 横扫持续期间 AOE
+    if ($.横扫攻击 >= 90) { // 横扫持续期间 AOE
       if (预估剩余怒气 >= 20) {
         if ($.英勇顺劈 < 1) {
           cast('顺劈斩');
         }
         预估剩余怒气 -= 20;
-        if (gcdReady && 预估剩余怒气 >= 40) {
-          if ($.嗜血 <= 0) {
+        if (gcdReady) {
+          if ($.嗜血 <= 0 && 预估剩余怒气 >= 40) {
             cast('嗜血');
             预估剩余怒气 -= 30;
-          } else if ($.旋风斩 <= 0) {
+          } else if ($.旋风斩 <= 0 && 预估剩余怒气 >= 60) {
             cast('旋风斩');
             预估剩余怒气 -= 25;
           }
