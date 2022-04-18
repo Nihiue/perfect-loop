@@ -43,11 +43,12 @@ async function main() {
     let barValues, mode = '';
 
     function cast(name) {
-      if (classConfig.keyMap[name]) {
-        pressKeyboard(classConfig.keyMap[name]);
+      const k = classConfig.keyMap[name];
+      if (typeof k === 'string' && k.length === 1) {
+        pressKeyboard(k.toLowerCase());
         log('Cast', name, globalConfig.debug ? JSON.stringify(barValues) : '');
       } else {
-        log('未找到按键', name);
+        log('未找到按键或按键配置无效', name);
       }
     }
 

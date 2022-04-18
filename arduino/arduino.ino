@@ -20,16 +20,29 @@ void loop() {
    int keyCount = 0;
    while(Serial.available()>0) {
     int value = Serial.read();
-    if (value >= 48 && value <= 122 && keyCount < 2) {
+    if (value < 48 || value > 122) {
+      continue;
+    }
+    if (value >= 58 && value <=64) {
+      continue; 
+    }
+    if (value >= 91 && value <= 96) {
+      continue;
+    }
+    if (value >= 65 && value <= 90) {
+      // 将大写字母映射为小写
+      value = value + 32;
+    }
+    if (keyCount < 3) {
       keyCount +=1;
       Keyboard.press(value);
-      // Serial.write(value);
-      delay(3);
+      Serial.write(value);
+      delay(10);
     }
   }
 
   if (keyCount > 0) {
-      delay(30 + random(30));
+      delay(20 + random(20));
       Keyboard.releaseAll();
       blink();
   }
