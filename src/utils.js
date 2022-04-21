@@ -5,7 +5,7 @@ async function sleep(ms = 500) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-function hex(n) {
+function toHex(n) {
   return n.toString(16).padStart(2, '0');
 }
 
@@ -44,7 +44,7 @@ const basePath = __dirname.includes('\\snapshot\\') ? process.execPath : path.jo
 
 module.exports = {
   sleep,
-  hex,
+  toHex,
   log,
   selectClass,
   beep,

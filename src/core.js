@@ -4,7 +4,7 @@ const fs = require('fs');
 const robotjs = require('@jitsi/robotjs');
 const { SerialPort } = require('serialport');
 const { rsHook } = require('@tcardlab/rshook');
-const { hex, sleep, globalConfigPath } = require('./utils');
+const { toHex, sleep, globalConfigPath } = require('./utils');
 const inquirer = require('inquirer');
 
 const COLOR_ACTIVE = 'ff0000';
@@ -12,15 +12,18 @@ const COLOR_BG = '282728';
 const COLOR_DETECT = 'c400ff';
 
 function getColor(img, x, y) {
-  const index = (Math.round(y) * img.width + Math.round(x)) * img.bytesPerPixel;
-  if (typeof img.image[index + img.bytesPerPixel - 1] === 'undefined') {
-    console.log('img out of range', index + 2, img.image.length);
+  const buffer = img.image;
+  const startIndex = (Math.round(y) * img.width + Math.round(x)) * img.bytesPerPixel;
+
+  if (typeof buffer[startIndex + 2] === 'undefined') {
+    console.log('point out of range', x, y, buffer.length);
     return '';
   }
+
   let ret = '';
-  for (let i = img.bytesPerPixel  - 2; i >= 0; i -= 1) {
-    ret += hex(img.image[index + i]);
-  }
+  ret += toHex(buffer[startIndex + 2]);
+  ret += toHex(buffer[startIndex + 1]);
+  ret += toHex(buffer[startIndex]);
   return ret;
 }
 

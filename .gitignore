@@ -3,3 +3,4 @@
 *.zip
 *.log
 node_modules/
+tmp-test.js
