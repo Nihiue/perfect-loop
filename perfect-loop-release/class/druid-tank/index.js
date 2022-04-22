@@ -1,6 +1,6 @@
 module.exports.config = {
   // 依次是每个进度条的名字
-  bars: ['怒气', 'GCD', '裂伤', '割伤', '精灵火'],
+  bars: ['怒气', 'GCD', '裂伤', '割伤', '精灵火', '重殴'],
   // 技能名称和案件的对应关系
   keyMap: {
     '裂伤': '1',
@@ -11,7 +11,6 @@ module.exports.config = {
   }
 };
 
-let 下次重殴判断 = 0;
 module.exports.loop = async function({ $, cast, sleep, now, mode }) {
   let 预估剩余怒气 = $.怒气;
   const gcdReady = $.GCD < 7;
@@ -31,8 +30,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
       }
     }
   }
-  if (now > 下次重殴判断 && 预估剩余怒气 > 35) {
+  if (预估剩余怒气 > 35 && $.重殴 < 1) {
     cast('重殴');
-    下次重殴判断 = now + 600;
   }
 }
