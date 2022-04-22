@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "scripts": {
+    "build": "pkg . --compress GZip"
+  },
   "dependencies": {
     "@jitsi/robotjs": "^0.6.9",
     "@tcardlab/rshook": "0.0.5",
@@ -22,7 +25,7 @@
   },
   "homepage": "https://github.com/Nihiue/perfect-loop#readme",
   "pkg": {
-    "scripts": "src/**/*.js",
+    "scripts": "src/*.js",
     "assets": [
       "node_modules/@jitsi/robotjs/prebuilds/win32-x64/*.node",
       "node_modules/@serialport/bindings-cpp/prebuilds/win32-x64/*.node"
