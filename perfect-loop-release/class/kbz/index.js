@@ -7,16 +7,16 @@ module.exports.config = {
     '旋风斩': '2',
     '英勇': '3',
     '顺劈斩': '4',
-    '断筋': '5',
-    '乘胜追击': '6',
+    '乘胜追击': '5',
+    '横扫攻击': '6',
     '斩杀': 'E',
-    '横扫攻击': 'T',
+    '断筋': 'T',
     '破甲': '9',
     '取消英勇': '0',
   },
 };
 
-module.exports.loop = async function({ $, cast, sleep, now, mode }) {
+module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterval }) {
   let 预估剩余怒气 = $.怒气;
   let gcdReady = $.GCD < 7;
 
@@ -36,15 +36,9 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
         if ($.英勇顺劈 < 1) {
           cast('顺劈斩');
         }
-        预估剩余怒气 -= 20;
-        if (gcdReady) {
-          if ($.嗜血 <= 0 && 预估剩余怒气 >= 40) {
-            cast('嗜血');
-            预估剩余怒气 -= 30;
-          } else if ($.旋风斩 <= 0 && 预估剩余怒气 >= 60) {
-            cast('旋风斩');
-            预估剩余怒气 -= 25;
-          }
+        if (gcdReady && $.嗜血 <= 0 && 预估剩余怒气 >= 30) {
+          cast('嗜血');
+          预估剩余怒气 -= 30;
         }
       }
     } else { // 非横扫持续 AOE
@@ -52,7 +46,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
         if ($.旋风斩 <= 0 && gcdReady) {
           cast('旋风斩');
           预估剩余怒气 -= 25;
-        } else if ($.横扫攻击 <= 0 && 预估剩余怒气 >= 50 && gcdReady) {
+        } else if ($.横扫攻击 <= 0 && 预估剩余怒气 >= 65 && gcdReady) {
           cast('横扫攻击');
           预估剩余怒气 -= 30;
         } else if ($.横扫攻击 > 20) { // 横扫还有很久 可以泄怒
@@ -93,11 +87,13 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
     }
 
     if ($.英勇顺劈 > 0) { // 英勇激活
-      if ((斩杀阶段 || 预估剩余怒气 < 60) && $.主手攻击 >= 80) {
+      if ((斩杀阶段 || 预估剩余怒气 <= 30) && $.主手攻击 >= 70) {
         cast('取消英勇');
+      } else if ($.主手攻击 >= 75 && $.主手攻击 < 80) {
+        setNextInterval(0.5);
       }
     } else {
-      if ($.主手攻击 > 3 && $.主手攻击 < 70 && 预估剩余怒气 >= 15) {
+      if ($.主手攻击 > 1 && $.主手攻击 <= 70 && 预估剩余怒气 >= 12) {
         cast('英勇');
       }
     }

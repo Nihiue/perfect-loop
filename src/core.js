@@ -71,7 +71,7 @@ module.exports.getBarValues = async function getBarValues(bars, barPosition) {
 
 module.exports.initKeyboard = function initKeyboard(config) {
   if (config.softKeyboard) {
-    robotjs.setKeyboardDelay(50);
+    robotjs.setKeyboardDelay(25);
     return function(k) {
       robotjs.keyTap(k);
     }

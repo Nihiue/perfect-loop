@@ -2,6 +2,7 @@ const path = require('path');
 const { sleep, log, beep, selectClass, globalConfigPath, classFolderPath } = require('./utils');
 const globalConfig = require(globalConfigPath);
 
+const DEFAULT_LOOP_INTERVAL = 100;
 const hotKeyMap = {
   'F9': 'SINGLE',
   'F10': 'AOE',
@@ -27,6 +28,9 @@ async function main() {
     }
 
     const { config: classConfig, loop } = require(path.join(classFolderPath, selection));
+    if (globalConfig.debug) {
+      console.log(path.join(classFolderPath, selection), classConfig);
+    }
     const pressKeyboard = initKeyboard(globalConfig);
 
     registerHotkey(Object.keys(hotKeyMap), (key) => {
@@ -52,15 +56,26 @@ async function main() {
       }
     }
 
-    async function loopPass() {
+    let nextIntervalValue = DEFAULT_LOOP_INTERVAL;
+    function setNextInterval (v) {
+      if (typeof v === 'number' && v > 0) {
+        nextIntervalValue = Math.round(DEFAULT_LOOP_INTERVAL * Math.max(v, 0.2));
+        if (globalConfig.debug) {
+          log(`nextIntervalValue: ${nextIntervalValue}`);
+        }
+      }
+    }
+
+    async function loopPass(now) {
       try {
         barValues = await getBarValues(classConfig.bars, globalConfig.barPosition);
         await loop({
           cast,
           sleep,
           mode,
+          now,
           $: barValues,
-          now: Date.now()
+          setNextInterval
         });
       } catch (e) {
         log('loopPass 异常');
@@ -70,13 +85,13 @@ async function main() {
 
     while (true) {
       if (mode) {
-        await Promise.all([
-          loopPass(),
-          sleep(100)
-        ]);
+        const startTime = Date.now();
+        await loopPass(startTime);
+        await sleep(nextIntervalValue + startTime - Date.now());
       } else {
         await sleep(500);
       }
+      nextIntervalValue = DEFAULT_LOOP_INTERVAL;
     }
   } catch (e) {
     console.log(e);

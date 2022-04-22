@@ -10,7 +10,7 @@ module.exports.config = {
   }
 };
 
-module.exports.loop = async function({ $, cast, sleep, now, mode }) {
+module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterval }) {
   if ($.下次普攻_4 < 0) {
     return;
   }
@@ -24,13 +24,14 @@ module.exports.loop = async function({ $, cast, sleep, now, mode }) {
         cast('十字军打击');
       } else if ($.审判 <= 0) {
         cast('审判');
+        setNextInterval(0.5);
       } else if (下次普攻 > gcdLength) {
         cast('命令圣印');
       }
     } else if ($.命令圣印 > 0) {
       if ($.十字军打击 <= 0 && 下次普攻 > gcdLength + 0.4) {
         cast('十字军打击');
-      } else if ($.下次普攻 <= 0.4) {
+      } else if (下次普攻 <= 0.4) {
         cast('鲜血圣印');
       }
     } else if ($.审判 > 0) {

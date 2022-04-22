@@ -1,7 +1,10 @@
 const inquirer = require('inquirer');
 const path = require('path');
 
-async function sleep(ms = 500) {
+function sleep(ms = 500) {
+  if (typeof ms !== 'number' || ms <= 0) {
+    return;
+  }
   return new Promise(r => setTimeout(r, ms));
 }
 
@@ -11,7 +14,7 @@ function toHex(n) {
 
 function log(...args) {
   const a = new Date();
-  console.log(`${a.getHours().toString().padStart(2, '0')}:${a.getMinutes().toString().padStart(2, '0')}:${a.getSeconds().toString().padStart(2, '0')}`, ...args);
+  console.log(`${a.getHours().toString().padStart(2, '0')}:${a.getMinutes().toString().padStart(2, '0')}:${a.getSeconds().toString().padStart(2, '0')}.${(a.valueOf() % 1000).toString().padStart(3, '0')}`, ...args);
 }
 
 async function selectClass(dict) {
