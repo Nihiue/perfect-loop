@@ -87,13 +87,13 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
     }
 
     if ($.英勇顺劈 > 0) { // 英勇激活
-      if ((斩杀阶段 || 预估剩余怒气 <= 30) && $.主手攻击 >= 70) {
+      if ((斩杀阶段 || 预估剩余怒气 <= 30) && $.主手攻击 >= 80) {
         cast('取消英勇');
       } else if ($.主手攻击 >= 75 && $.主手攻击 < 80) {
         setNextInterval(0.5);
       }
     } else {
-      if ($.主手攻击 > 1 && $.主手攻击 <= 70 && 预估剩余怒气 >= 12) {
+      if ($.主手攻击 > 1 && $.主手攻击 < 75 && 预估剩余怒气 >= 12) {
         cast('英勇');
       }
     }
