@@ -50,7 +50,13 @@ async function main() {
       const k = classConfig.keyMap[name];
       if (typeof k === 'string' && k.length === 1) {
         pressKeyboard(k.toLowerCase());
-        log('Cast', name, globalConfig.debug ? JSON.stringify(barValues) : '');
+        let ev = '';
+        if (globalConfig.debug) {
+          ev = Object.keys(barValues).map(function (k) {
+            return `${k}:${barValues[k].toString().padEnd(3)}`;
+          }).join(' ');
+        }
+        log('Cast', name.padEnd(4), ev);
       } else {
         log('未找到按键或按键配置无效', name);
       }

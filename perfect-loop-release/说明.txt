@@ -4,6 +4,7 @@ class 目录下的各文件夹是不同的专精，每个专精都有一个wa可
 
 专精的列表可编辑 class/global-config.json 添加
 
+将 !BlizzardFix 放置到 World of Warcraft\_classic_\Interface\AddOns 目录下可以修复普攻条不实时随急速变化的问题
 
 开始使用
 ---------------

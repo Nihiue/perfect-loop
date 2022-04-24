@@ -57,9 +57,10 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
     }
   } else {
     const 斩杀阶段 = $.目标血量 <= 20;
-    if (gcdReady) {
-      const 启用嗜血旋风斩 = !斩杀阶段 || $.混合斩杀 > 0;
+    const 嗜血旋风斩即将就绪 = $.嗜血 <= 35 || $.旋风斩 <= 23;
+    const 启用嗜血旋风斩 = !斩杀阶段 || $.混合斩杀 > 0;
 
+    if (gcdReady) {
       if (斩杀阶段 && $.怒气 > 95) {
         // 满怒斩杀
         cast('斩杀');
@@ -67,7 +68,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
         cast('嗜血');
       } else if (启用嗜血旋风斩 && $.怒气 >= 25 && $.旋风斩 <= 0) {
         cast('旋风斩');
-      } else if(!斩杀阶段 && $.怒气 > 65 && $.乱舞 < 1 && $.旋风斩 >= 20 && $.嗜血 >= 30) {
+      } else if(!斩杀阶段 && $.怒气 > 60 && $.乱舞 < 1 && !嗜血旋风斩即将就绪) {
         cast('断筋');
       } else if (斩杀阶段 && $.怒气 >= 12) {
         // 低怒斩杀
@@ -76,13 +77,13 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
     }
 
     if ($.英勇顺劈 > 0) { // 英勇激活
-      if ((斩杀阶段 || $.怒气 <= 30) && $.主手攻击 >= 80) {
+      if ((斩杀阶段 || ($.怒气 <= 35 && 嗜血旋风斩即将就绪)) && $.主手攻击 >= 85) {
         cast('取消英勇');
-      } else if ($.主手攻击 >= 75 && $.主手攻击 < 80) {
+      } else if ($.主手攻击 >= 80 && $.主手攻击 < 85) {
         setNextInterval(0.5);
       }
     } else {
-      if ($.主手攻击 > 1 && $.主手攻击 < 75 && $.怒气 >= 12) {
+      if ($.主手攻击 > 0 && $.主手攻击 < 80 && $.怒气 >= 12) {
         cast('英勇');
       }
     }
