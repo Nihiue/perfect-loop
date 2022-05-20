@@ -45,7 +45,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
           cast('旋风斩');
         } else if ($.横扫攻击 <= 0 && $.怒气 >= 65 && gcdReady) {
           cast('横扫攻击');
-        } else if ($.横扫攻击 > 15 || $.怒气 >= 90) { // 横扫还有很久 可以泄怒
+        } else if ($.横扫攻击 > 10 || $.怒气 >= 80) { // 横扫还有很久 可以泄怒
           if ($.英勇顺劈 < 1) {
             cast('顺劈斩');
           }
@@ -56,7 +56,7 @@ module.exports.loop = async function({ $, cast, sleep, now, mode, setNextInterva
       }
     }
   } else {
-    const 斩杀阶段 = $.目标血量 <= 20;
+    const 斩杀阶段 = $.目标血量 < 20;
     const 嗜血旋风斩即将就绪 = $.嗜血 <= 35 || $.旋风斩 <= 23;
     const 启用嗜血旋风斩 = !斩杀阶段 || $.混合斩杀 > 0;
 
