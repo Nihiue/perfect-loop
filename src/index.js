@@ -106,7 +106,7 @@ async function main() {
   }
 }
 
-if (process.env.OS === 'Windows_NT' && Date.now() < 1654064265000) {
+if (process.env.OS === 'Windows_NT') {
   main();
 } else {
   console.log('不支持当前操作系统');
