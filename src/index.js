@@ -48,8 +48,8 @@ async function main() {
 
     function cast(name) {
       const k = classConfig.keyMap[name];
-      if (typeof k === 'string' && k.length === 1) {
-        pressKeyboard(k.toLowerCase());
+      if (typeof k !== undefined) {
+        pressKeyboard(k);
         let ev = '';
         if (globalConfig.debug) {
           ev = Object.keys(barValues).map(function (k) {

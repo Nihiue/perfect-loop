@@ -7,7 +7,7 @@
     "build": "pkg . --compress GZip"
   },
   "dependencies": {
-    "@jitsi/robotjs": "^0.6.9",
+    "@jitsi/robotjs": "^0.6.13",
     "@tcardlab/rshook": "0.0.5",
     "inquirer": "^8.2.2",
     "serialport": "^10.4.0"
