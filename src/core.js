@@ -24,7 +24,7 @@ function getColor(img, x, y) {
 
 module.exports.getBarValues = async function getBarValues(bars, barPosition) {
   const areaW = Math.round(barPosition.width * 1.1);
-  const areaH = Math.round(barPosition.height * bars.length * 2.1);
+  const areaH = Math.round(barPosition.height * bars.length * 1.25);
 
   const img = await robotjs.screen.capture(
     barPosition.x,
@@ -36,7 +36,7 @@ module.exports.getBarValues = async function getBarValues(bars, barPosition) {
   const ret = {};
 
   bars.forEach((name, idx) => {
-    const barY = barPosition.height * (2 * idx + 0.5);
+    const barY = barPosition.height * (1.2 * idx + 0.5);
 
     const startColor = getColor(img, 0, barY);
     const endColor = getColor(img, barPosition.width, barY);
