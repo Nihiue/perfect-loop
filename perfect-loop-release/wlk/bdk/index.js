@@ -122,7 +122,7 @@ module.exports.loop = async function ({ $, cast, sleep, now, mode }) {
     }
 
     // 符文武器后短时间允许溢出符能
-    if ($.符能 >= 90 && $.增效 >= 3) {
+    if ($.符能 >= 80 && $.增效 >= 3) {
       return cast('冰霜打击');
     }
 
@@ -151,12 +151,12 @@ module.exports.loop = async function ({ $, cast, sleep, now, mode }) {
       return cast('亡者复生');
     }
 
-    if ($.冰雾 > 0 && $.杀戮 === 0) {
-      return cast('凛风冲击');
-    }
-
     if ($.符能 >= 28) {
       return cast('冰霜打击');
+    }
+
+    if ($.冰雾 > 0 && $.杀戮 === 0) {
+      return cast('凛风冲击');
     }
 
     if ($.号角 < 70) {

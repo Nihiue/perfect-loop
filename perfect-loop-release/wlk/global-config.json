@@ -8,7 +8,8 @@
   "port": "COM8",
   "softKeyboard": true,
   "classMap": {
-    "bdk": "DK - 冰霜"
+    "bdk": "DK - 冰霜",
+    "lr": "猎人 - 生存"
   },
   "sound": true,
   "debug": false
